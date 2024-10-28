@@ -1,0 +1,192 @@
+package assignmentno2;
+
+import java.util.GregorianCalendar;
+import java.util.Scanner;
+import rtestapplicationmenu.RDirectory;
+
+
+public class Assignmentno2 {
+
+
+public class RTestApplicationMenu {
+    public  void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        RDirectory directory = new RDirectory();
+
+        while (true) {
+            System.out.println("Menu:");
+            System.out.println("1. Add Contact");
+            System.out.println("2. Display All Contacts");
+            System.out.println("3. Exit");
+            System.out.print("Choose an option: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); 
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter first name: ");
+                    String fName = scanner.nextLine();
+                    System.out.print("Enter last name: ");
+                    String lName = scanner.nextLine();
+                    System.out.print("Enter phone numbers (comma-separated): ");
+                    String[] phoneNums = scanner.nextLine().split(",");
+                    System.out.print("Enter affiliation: ");
+                    String affiliation = scanner.nextLine();
+                    System.out.print("Enter occupation: ");
+                    String occupation = scanner.nextLine();
+                    System.out.print("Enter note: ");
+                    String note = scanner.nextLine();
+                    System.out.print("Enter date of birth (YYYY-MM-DD): ");
+                    String dobInput = scanner.nextLine();
+                    String[] dobParts = dobInput.split("-");
+                    GregorianCalendar dob = new GregorianCalendar(
+                            Integer.parseInt(dobParts[0]),
+                            Integer.parseInt(dobParts[1]) - 1,
+                            Integer.parseInt(dobParts[2]));
+                    directory.addRContact(fName, lName, phoneNums, affiliation, occupation, note, dob);
+                    break;
+                case 2:
+                    System.out.println(directory);
+                    break;
+                case 3:
+                    System.out.println("Exiting...");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+}
+
+      
+    }
+    
+
+package rtestapplicationmenu;
+
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+
+public class RDirectory {
+    private ArrayList<RContact> directory;
+    private int num;
+
+    public RDirectory() {
+        this.directory = new ArrayList<>();
+        this.num = 0;
+    }
+
+    public void addRContact(RContact c) {
+        directory.add(c);
+        num++;
+    }
+
+    public void addRContact(String f, String l, String[] p, String a, String o, String n, GregorianCalendar dob) {
+        RContact c = new RContact(f, l, p, a, o, n, dob);
+        addRContact(c);
+    }
+
+    public RContact search(String fName) {
+        for (RContact c : directory) {
+            if (c.getfName().equalsIgnoreCase(fName)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public boolean deleteRContact(String fName) {
+        for (RContact c : directory) {
+            if (c.getfName().equalsIgnoreCase(fName)) {
+                directory.remove(c);
+                num--;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "RDirectory{" +
+                "num=" + num +
+                ", contacts=" + directory +
+                '}';
+    }
+}
+package rtestapplicationmenu;
+
+import java.util.GregorianCalendar;
+
+public class RContact {
+    private String fName;
+    private String lName;
+    private String[] phoneNum;
+    private String affiliation;
+    private String occupation;
+    private String note = "";
+    private GregorianCalendar dob;
+    private boolean blocked = false;
+
+    public RContact() {
+        this.phoneNum = new String[5];
+    }
+
+    public RContact(String fName, String lName, String[] phoneNum, String affiliation, String occupation, String note, GregorianCalendar dob) {
+        this.fName = fName;
+        this.lName = lName;
+        this.phoneNum = phoneNum;
+        this.affiliation = affiliation;
+        this.occupation = occupation;
+        this.note = note;
+        this.dob = dob;
+    }
+
+    public String getfName() {
+        return fName;
+    }
+
+    public void setfName(String fName) {
+        this.fName = fName;
+    }
+
+    public String[] getPhoneNum() {
+        return phoneNum;
+    }
+
+    public void setPhoneNum(String[] phoneNum) {
+        this.phoneNum = phoneNum;
+    }
+
+    public void replaceNumber(String oldNum, String newNum) {
+        for (int i = 0; i < phoneNum.length; i++) {
+            if (phoneNum[i] != null && phoneNum[i].equals(oldNum)) {
+                phoneNum[i] = newNum;
+                break;
+            }
+        }
+    }
+
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(boolean b) {
+        this.blocked = b; 
+    }
+
+    @Override
+    public String toString() {
+        return "RContact{" +
+                "fName='" + fName + 
+                ", lName='" + lName + 
+                ", phoneNum=" + 
+                ", affiliation='" + affiliation + 
+                ", occupation='" + occupation + 
+                ", note='" + note  +
+                ", dob=" + dob.getTime() +
+                ", blocked=" + blocked +
+                '}';
+    }
+}
